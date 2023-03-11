@@ -1,7 +1,9 @@
 import os
+import sys
+import tty
+import termios
 
 from colorama import Fore
-from getch import getch
 
 import resources.utils.functions as func
 from resources.utils.ghost import Ghost
@@ -33,9 +35,23 @@ class StateManager:
 def clear():
     if os.name == 'nt':
         os.system('cls')
-    elif os.name == 'posix':
+    if os.name == 'posix':
         os.system('clear')
     print(title + "\n" + Fore.RESET)
+
+
+def getch():
+    if os.name == 'nt':
+        msvcrt.getch()
+    if os.name == 'posix':
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            char = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return char
 
 
 def exit():
