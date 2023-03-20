@@ -23,7 +23,7 @@ def format_ghost_fname(ghost: Ghost):
     lap3 = f"{str(ghost.data['lap3_seconds'] + 60 * ghost.data['lap1_minutes'])}.{str(ghost.data['lap3_milliseconds']).zfill(3)}"
     date_laps = bytes(f"{year} {month} {day} {lap1} {lap2} {lap3}", 'utf-16')
     hash_ = sha256(date_laps)
-    ghost_id = hash_.hexdigest()[:4]  # to avoid duplicate ghosts
+    ghost_id = hash_.hexdigest()[:4]  # to avoid issues where ghosts with the same mii name/track tie
     new_fname = f"{track_abbrev(ghost.get_track_name())}_{ghost.get_time().replace(':', '-')}_{ghost.get_mii_name()}_{ghost_id}.rkg"
     os.rename(f'ghosts/{ghost.fname}', f'ghosts/{new_fname}')
     ghost.fname = new_fname
@@ -41,3 +41,7 @@ def track_abbrev(track_name) -> str:
         elif not all_upper:
             list_[i] = str_[0]
     return ''.join(list_)
+
+
+def preview_ghost(ghost: Ghost) -> str:
+    return f"{track_abbrev(ghost.get_track_name())} - {ghost.get_time()} - {ghost.get_mii_name()}"

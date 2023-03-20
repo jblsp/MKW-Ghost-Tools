@@ -1,5 +1,4 @@
-import resources.utils.functions as cli
-import resources.ids.mkw_ids as mkwids
+import resources.mkw_ids as mkw_ids
 
 
 class Ghost:
@@ -49,9 +48,6 @@ class Ghost:
 
         self.mii_data = bytes_[0x3C:0x3C+0x4A]
 
-    def preview(self) -> str:  # should be moved to utils.py
-        return f"{cli.track_abbrev(self.get_track_name())} - {self.get_time()} - {self.get_mii_name()}"
-
     def get_mii_name(self) -> str:
         return self.mii_data[0x2:0x15+1].decode("utf-16be").replace('\x00', '')
 
@@ -69,13 +65,56 @@ class Ghost:
             return f"{self.data[f'lap{lap}_seconds']}.{ms}"
         
     def get_ghost_type(self) -> str:
-        return mkwids.ghost_type[self.data['ghost_type']]
+        return mkw_ids.ghost_type[self.data['ghost_type']]
     
     def get_track_name(self) -> str:
-        return mkwids.track_ids[self.data['track_id']]
+        return mkw_ids.track_ids[self.data['track_id']]
     
     def get_compression(self) -> str:
-        return mkwids.compression[self.data['compression']]
+        return {
+            0: "Raw",
+            1: "YAZ1"
+        }[self.data['compression']]
+    
+    def get_country(self) -> str:
+        return mkw_ids.country[self.data['country_code']]
+    
+    def get_controller(self) -> str:
+        return {
+            0: "Wii Wheel",
+            1: "Wiimote + Nunchuk",
+            2: "Classic Controller",
+            3: "GameCube Controller"
+        }[self.data['controller_id']]
+    
+    def get_character(self) -> str:
+        return mkw_ids.character_ids[self.data['character_id']]
+    
+    def get_vehicle(self) -> str:
+        return mkw_ids.vehicle_ids[self.data['vehicle_id']]
+    
+    def get_drift_type(self) -> str:
+        return {
+            0: "Manual",
+            1: "Automatic"
+        }[self.data['drift_type']]
+    
+    def get_date_set(self) -> str:
+        months = {
+            1: "Jan",
+            2: "Feb",
+            3: "Mar",
+            4: "Apr",
+            5: "May",
+            6: "Jun",
+            7: "Jul",
+            8: "Aug",
+            9: "Sep",
+            10: "Oct",
+            11: "Nov",
+            12: "Dec"
+        }
+        return f"{months[self.data['month']]} {self.data['day']} {self.data['year'] + 2000}"
     
     def write_to_file(self):
         with open(f"ghosts/{self.fname}", "rb") as f:

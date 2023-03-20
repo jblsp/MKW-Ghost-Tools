@@ -2,17 +2,18 @@ import os
 import sys
 import tty
 import termios
+if os == "nt": import msvcrt
 
 from colorama import Fore
 
 import resources.utils.functions as func
 from resources.utils.ghost import Ghost
-from states import main_menu
+from states import initial
 
 
 class StateManager:
     def __init__(self):
-        self.active = main_menu
+        self.active = initial
         self.args = ()
         self.tree = []
 
@@ -95,7 +96,7 @@ def select_ghost(state) -> Ghost:
     lines = []
     column2_index = 0
     for i, ghost in enumerate(ghosts):
-        str_ = f"[{i + 1}] {ghost.preview()}"
+        str_ = f"[{i + 1}] {func.preview_ghost(ghost)}"
         if i <= len(ghosts) // 2:
             lines.append(str_.ljust(40))
         else:
@@ -116,7 +117,7 @@ def select_ghost(state) -> Ghost:
         try:
             return ghosts[int(selection) - 1]
         except (IndexError, ValueError):
-            print(Fore.RED + "Enter a valid ghost index." + Fore.RESET)
+            print(Fore.RED + "Enter a valid index." + Fore.RESET)
 
 
 def create_title():

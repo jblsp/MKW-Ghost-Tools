@@ -3,7 +3,7 @@ import resources.utils.functions as func
 from resources.utils.ghost import Ghost
 
 
-def main_menu(state):
+def initial(state):
     selection = cli.choice(state, prompt="What would you like to do?", choices={
         "g": "Ghost Manager",
         # "s": "Save Manager",
@@ -32,6 +32,7 @@ def ghost_manager(state):
         state.switch(ghost_tools)
 
 
+
 def open_ghost(state):
     ghost = cli.select_ghost(state)
     if isinstance(ghost, Ghost):
@@ -48,30 +49,36 @@ def selected_ghost(state, ghost):
         f"Lap 3: {ghost.get_lap(3)}",
         f"",
         f"Ghost Type: {ghost.get_ghost_type()}",
-        f"Compression: {ghost.get_compression()}",
-        f""
+        f"Compression: {ghost.get_compression()}"
     ]
     ghost_view_col2 = [
         f"Mii Name: {ghost.get_mii_name()}",
-        f"Country: TODO",
-        f"State: TODO",
-        f"Controller: TODO",
+        f"Country: {ghost.get_country()}",
+        f"Controller: {ghost.get_controller()}",
         f"",
-        f"Character: TODO",
-        f"Vehicle: TODO",
-        f"Drift Type: TODO",
+        f"Character: {ghost.get_character()}",
+        f"Vehicle: {ghost.get_vehicle()}",
+        f"Drift Type: {ghost.get_drift_type()}",
         f"",
-        f"Date Set: TODO"
+        f"Date Set: {ghost.get_date_set()}"
     ]
 
     ghost_view = []
     for i in range(len(ghost_view_col1)):
-        ghost_view.append(ghost_view_col1[i].ljust(40) + ghost_view_col2[i])
+        try:
+            col1 = ghost_view_col1[i].ljust(40)
+        except IndexError:
+            col1 = "".ljust(40)
+        try:
+            col2 = ghost_view_col2[i]
+        except IndexError:
+            col2 = "".ljust(40)
+        ghost_view.append(col1 + col2)
+
 
     print('\n'.join(ghost_view) + '\n')
 
     selection = cli.choice(state, choices={
-        # "e": "Edit",
         # "r": "Rename",
         # "d": "Delete",
     })
