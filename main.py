@@ -8,7 +8,7 @@ import resources.utils.CLI as cli
 if __name__ == "__main__":
     initcolorama()
 
-    folders = ['ghosts', 'saves']
+    folders = ['ghosts', 'saves', 'miis']
     for folder in folders:
         if not os.path.exists(folder):
             os.mkdir(folder)

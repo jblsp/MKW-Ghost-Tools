@@ -1,8 +1,10 @@
 import os
 import sys
-import tty
-import termios
-if os == "nt": import msvcrt
+if os.name == "nt":
+    import msvcrt
+if os.name == "posix":
+    import tty
+    import termios
 
 from colorama import Fore
 
@@ -43,7 +45,7 @@ def clear():
 
 def getch():
     if os.name == 'nt':
-        msvcrt.getch()
+        return msvcrt.getch().decode('utf-8')
     if os.name == 'posix':
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
@@ -79,7 +81,7 @@ def choice(state, choices: dict = None, prompt: str = "") -> str:
         choices_list.append("[b] Back")
     choices_list.append(Fore.RED + "[x] Exit" + Fore.RESET)
     print('\n'.join(choices_list))
-    selection = str(getch()).lower()
+    selection = getch().lower()
     clear()
     if selection == "x":
         exit()
