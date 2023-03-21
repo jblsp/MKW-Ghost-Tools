@@ -7,9 +7,9 @@ def initial(state):
     selection = cli.choice(state, prompt="What would you like to do?", choices={
         "g": "Ghost Manager",
         # "s": "Save Manager",
+        # "m": "Mii Manager",
         # "t": "Create top 10 (by WhatisLoaf)",
-        # "i": "Generate input viewer (by WhatisLoaf),"
-        # "m": "Rename miis"
+        # "i": "Generate input viewer (by WhatisLoaf)",
     })
     if selection == "g":
         state.switch(ghost_manager)
@@ -32,7 +32,6 @@ def ghost_manager(state):
         state.switch(ghost_tools)
 
 
-
 def open_ghost(state):
     ghost = cli.select_ghost(state)
     if isinstance(ghost, Ghost):
@@ -42,12 +41,12 @@ def open_ghost(state):
 def selected_ghost(state, ghost):
     ghost_view_col1 = [
         f"Track: {ghost.get_track_name()}",
-        f"",
+        "",
         f"Time: {ghost.get_time()}",
         f"Lap 1: {ghost.get_lap(1)}",
         f"Lap 2: {ghost.get_lap(2)}",
         f"Lap 3: {ghost.get_lap(3)}",
-        f"",
+        "",
         f"Ghost Type: {ghost.get_ghost_type()}",
         f"Compression: {ghost.get_compression()}"
     ]
@@ -55,11 +54,11 @@ def selected_ghost(state, ghost):
         f"Mii Name: {ghost.get_mii_name()}",
         f"Country: {ghost.get_country()}",
         f"Controller: {ghost.get_controller()}",
-        f"",
+        "",
         f"Character: {ghost.get_character()}",
         f"Vehicle: {ghost.get_vehicle()}",
         f"Drift Type: {ghost.get_drift_type()}",
-        f"",
+        "",
         f"Date Set: {ghost.get_date_set()}"
     ]
 
@@ -75,17 +74,17 @@ def selected_ghost(state, ghost):
             col2 = "".ljust(40)
         ghost_view.append(col1 + col2)
 
-
     print('\n'.join(ghost_view) + '\n')
 
     selection = cli.choice(state, choices={
-        # "r": "Rename",
-        # "d": "Delete",
+        # "e": "Edit values",
+        # "r": "Rename file",
+        # "d": "Delete file",
     })
 
 
 def ghost_tools(state):
-    selection = cli.choice(state, prompt=f"Ghost Tools", choices={
+    selection = cli.choice(state, prompt="Ghost Tools", choices={
         "f": "Format ghost filenames"
     })
     if selection == 'f':
